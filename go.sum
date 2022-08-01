@@ -1,0 +1,4 @@
+github.com/Admingyu/go-workingday v0.0.0-20210414060512-db888780ffc4 h1:uT40x5sMvf42YndU6GYtR0jNzFlpYnU+4BbsQHsAYTw=
+github.com/Admingyu/go-workingday v0.0.0-20210414060512-db888780ffc4/go.mod h1:F9LgyIZT/N79G+EimgCAOEXMu0B3QJfMVq3bPuhNc4c=
+github.com/go-telegram-bot-api/telegram-bot-api/v5 v5.5.1 h1:wG8n/XJQ07TmjbITcGiUaOtXxdrINDz1b0J1w0SzqDc=
+github.com/go-telegram-bot-api/telegram-bot-api/v5 v5.5.1/go.mod h1:A2S0CWkNylc2phvKXWBBdD3K0iGnDBGbzRpISP2zBl8=
