@@ -11,6 +11,7 @@ type Config struct {
 	ChatId int64  `json:"chat_id"`
 	Hour   int    `json:"hour"`
 	Minute int    `json:"minute"`
+	Proxy  string `json:"proxy"`
 }
 
 func ReadConfig(path string) {

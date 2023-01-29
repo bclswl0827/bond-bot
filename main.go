@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"log"
+	"os"
 	"time"
 
 	workingday "github.com/Admingyu/go-workingday"
@@ -28,6 +29,12 @@ func main() {
 
 	// 读取配置文件
 	ReadConfig(conf)
+
+	// 设定代理
+	if len(config.Proxy) > 0 {
+		// 设定环境变量
+		os.Setenv("HTTPS_PROXY", config.Proxy)
+	}
 
 	// 初始化 Bot
 	if bot, err := tgbotapi.NewBotAPI(config.Token); err != nil {
