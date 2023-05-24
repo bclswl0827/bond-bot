@@ -2,8 +2,7 @@ package main
 
 import (
 	"encoding/json"
-	"io/ioutil"
-	"log"
+	"os"
 )
 
 type Config struct {
@@ -11,17 +10,20 @@ type Config struct {
 	ChatId int64  `json:"chat_id"`
 	Hour   int    `json:"hour"`
 	Minute int    `json:"minute"`
-	Proxy  string `json:"proxy"`
 }
 
-func ReadConfig(path string) {
-	if json.Unmarshal(func(path string) []byte {
-		b, err := ioutil.ReadFile(path)
-		if err != nil {
-			log.Fatalln("Failed to read config file")
-		}
-		return b
-	}(path), &config) != nil {
-		log.Fatalln("Failed to parse config file")
+func (config *Config) ReadConfig(path string) error {
+	file, err := os.Open(path)
+	if err != nil {
+		return err
 	}
+	defer file.Close()
+
+	decoder := json.NewDecoder(file)
+	err = decoder.Decode(&config)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

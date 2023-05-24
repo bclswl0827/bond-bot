@@ -1,67 +1,48 @@
 package main
 
 import (
-	"flag"
 	"log"
-	"os"
 	"time"
 
 	workingday "github.com/Admingyu/go-workingday"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
-// 先将就用吧
-var (
-	// 配置文件路径
-	conf string
-	// 配置文件内容
-	config Config
-	// Bot 实例
-	Bot *tgbotapi.BotAPI
-	// 记录推送
-	Sent bool
-)
-
 func main() {
-	// 命令行参数
-	flag.StringVar(&conf, "c", "./config.json", "Config file path")
-	flag.Parse()
+	var (
+		args Args
+		conf Config
+	)
 
-	// 读取配置文件
-	ReadConfig(conf)
+	args.ReadFlags()
+	conf.ReadConfig(args.Path)
 
-	// 设定代理
-	if len(config.Proxy) > 0 {
-		// 设定环境变量
-		os.Setenv("HTTPS_PROXY", config.Proxy)
-	}
-
-	// 初始化 Bot
-	if bot, err := tgbotapi.NewBotAPI(config.Token); err != nil {
+	bot, err := tgbotapi.NewBotAPI(conf.Token)
+	if err != nil {
 		log.Fatalln(err)
-	} else {
-		Bot = bot
-		log.Println("Authorized on account", Bot.Self.UserName)
 	}
+	log.Println("Authorized account", bot.Self.UserName)
+
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 10
 
-	// 定时重置 Flag
-	go ResetFlag()
+	var flag bool
+	go ResetFlag(conf, &flag)
 
-	// 定时发送讯息
 	for {
-		if work, _ := workingday.IsWorkDay(
+		work, _ := workingday.IsWorkDay(
 			time.Now(), "CN",
-		); work && !Sent {
+		)
+		if work && !flag {
 			MessageSender(
-				BondFilter(
-					BondParser(
-						BondData(),
-					),
-				), config.ChatId,
+				bot, conf.ChatId, BondFilter(
+					BondParser(BondData()),
+				),
 			)
-			Sent = true
+
+			flag = true
 		}
+
+		time.Sleep(time.Second)
 	}
 }

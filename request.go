@@ -17,7 +17,7 @@ func BondData() []byte {
 			continue
 		}
 		defer resp.Body.Close()
-		// 返回 []byte 类型数据
+
 		b, _ := ioutil.ReadAll(resp.Body)
 		return b
 	}

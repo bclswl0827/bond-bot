@@ -2,6 +2,5 @@
     "token": "123",
     "chat_id": 123,
     "hour": 9,
-    "minute": 30,
-    "proxy": "http://127.0.0.1:10809"
+    "minute": 30
 }
