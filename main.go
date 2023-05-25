@@ -27,17 +27,27 @@ func main() {
 	u.Timeout = 10
 
 	var flag bool
-	go ResetFlag(conf, &flag)
+	var timezone, _ = time.LoadLocation("Asia/Shanghai")
+	go ResetFlag(conf, timezone, &flag)
 
+	var (
+		prevDay int
+		workDay bool
+	)
 	for {
-		work, _ := workingday.IsWorkDay(
-			time.Now(), "CN",
-		)
-		if work && !flag {
+		currentDay := time.Now().In(timezone).Day()
+		if prevDay != currentDay {
+			workDay, _ = workingday.IsWorkDay(
+				time.Now().In(timezone), "CN",
+			)
+
+			prevDay = currentDay
+		}
+
+		if workDay && !flag {
+			bonds := BondParser(BondData())
 			MessageSender(
-				bot, conf.ChatId, BondFilter(
-					BondParser(BondData()),
-				),
+				bot, conf.ChatId, BondFilter(bonds),
 			)
 
 			flag = true

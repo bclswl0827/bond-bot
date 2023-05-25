@@ -1,6 +1,6 @@
 {
-    "token": "123",
-    "chat_id": 123,
+    "token": "123456789:abcdefghijklmnopqrstuvwxyz",
+    "chat_id": 987654321,
     "hour": 9,
     "minute": 30
 }

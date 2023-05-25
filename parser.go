@@ -6,19 +6,17 @@ import (
 	"time"
 )
 
-// 解析获取的 JSONP 数据
-func BondParser(data []byte) interface{} {
-	var bond interface{}
+func BondParser(data []byte) any {
+	var bond any
 	json.NewDecoder(&JsonpWrapper{
 		Underlying: bytes.NewBuffer(data),
 		Prefix:     "_",
 	}).Decode(&bond)
+
 	return bond
 }
 
-// 筛选 JSONP 数据，返回到字符串数组
-func BondFilter(data interface{}) string {
-	// 声明结构体用于提取数据供遍历
+func BondFilter(data any) string {
 	type Bonds struct {
 		Result struct {
 			Data []struct {
@@ -33,12 +31,11 @@ func BondFilter(data interface{}) string {
 		message string = ""
 		bonds   Bonds
 	)
-	json.Unmarshal(func(data interface{}) []byte {
+	json.Unmarshal(func(data any) []byte {
 		b, _ := json.Marshal(data)
 		return b
 	}(data), &bonds)
 
-	// 遍历匹配数据
 	for _, v := range bonds.Result.Data {
 		// 匹配今天
 		if v.Date == time.Now().Format("2006-01-02")+" 00:00:00" {
@@ -54,7 +51,6 @@ func BondFilter(data interface{}) string {
 		}
 	}
 
-	// 返回讯息前判断是否有数据
 	if len(message) == 0 {
 		message = "今天没有可转债供申购或预约"
 	}

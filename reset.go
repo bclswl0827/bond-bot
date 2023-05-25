@@ -4,11 +4,17 @@ import (
 	"time"
 )
 
-func ResetFlag(config Config, flag *bool) {
+func ResetFlag(config Config, timzone *time.Location, flag *bool) {
 	for {
-		if time.Now().Hour() == config.Hour &&
-			time.Now().Minute() == config.Minute &&
-			time.Now().Second() == 0 {
+		var (
+			hour   = time.Now().In(timzone).Hour()
+			minute = time.Now().In(timzone).Minute()
+			second = time.Now().In(timzone).Second()
+		)
+
+		if hour == config.Hour &&
+			minute == config.Minute &&
+			second == 0 {
 			*flag = false
 		} else {
 			*flag = true
